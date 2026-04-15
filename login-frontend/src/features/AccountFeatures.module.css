@@ -1,0 +1,142 @@
+/*CSS for ChangeEmail, ChangePassword and DeleteAccount forms.*/
+
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 101;
+  background-color: rgb(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  background-color: #1E1A23;
+  padding: 2rem;
+  border: 2px solid #EAFDF8;
+  border-radius: 1rem;
+  margin: 0.7rem;
+}
+
+.modalButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  width: 256px;
+}
+
+.text {
+  margin-left: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.errorText {
+  color: red;
+  font-size: 0.9rem;
+  align-self: center;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputArea {
+  border: 3px solid #7D65A4;
+  border-radius: 0.5rem;
+  height: 2rem;
+  padding: 0 34px 0 0.5rem;
+}
+
+.passwordContainer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.showPasswordButton {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  align-self: center;
+  background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+}
+
+.buttonContainer {
+  align-items: center;
+
+  @media screen and (min-width: 768px) {
+    margin-left: auto;
+  }
+}
+
+.button {
+  color: white;
+  background-color: #7D65A4;
+  border: none;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 24px;
+  height: 2em;
+  padding: 0 1rem;
+  width: 8rem;
+
+  cursor: pointer;
+  &:hover {
+    background-color: #43355A;
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.confirmButton {
+  composes: button;
+}
+
+.deleteButton {
+  composes: button;
+  background-color: #a30000;
+  width: 45%;
+  
+  &:hover {
+    background-color: #770000;
+  }
+}
+
+.cancelButton {
+  composes: button;
+  background-color: #7D65A4;
+  width: 45%;
+
+  &:hover {
+    background-color: #43355A;
+  }
+}

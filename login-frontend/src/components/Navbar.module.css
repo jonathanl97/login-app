@@ -1,0 +1,160 @@
+.navbar {
+  position: sticky;
+  top: 0.7rem;
+  height: 74px;
+  margin: 0 0.7rem;
+  border-radius: 1rem;
+  border: 2px solid white;
+  background-color: #7D65A4;
+  color: white;
+  box-shadow: 0 -0.5rem 1rem 2rem #1E1A23;
+  display: flex;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.menuIcon {
+  height: 48px;
+  width: 48px;
+  align-self: center;
+  color: white;
+  border-radius: 0.5rem;
+  margin: 0.7rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #43355A;
+    transition: all 0.2s ease-in-out
+  }
+}
+
+.responsiveNavLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  list-style: none;
+  padding: 1rem 0;
+  right: 0;
+  margin: 0;
+  background-color: #7D65A4;
+  position: absolute;
+  top: 62px;
+  border: 2px white;
+  border-radius: 0 0 1rem 1rem;
+}
+
+.navLinks {
+  display: none;
+  justify-content: center;
+  list-style: none;
+  margin-right: auto;
+  padding-left: 0;
+}
+
+.navLinksIndividual {
+  display: flex;
+  color: white;
+  text-decoration: none;
+  justify-content: center;
+  padding: 0.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  margin: 0.3rem 0.1rem 0 0.1rem;
+  width: 100px;
+
+  &:hover {
+    background-color: #43355A;
+    transition: all 0.2s ease-in-out
+  }
+}
+
+.hiddenLink {
+  display: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-right: 1.5rem;
+}
+
+.logo {
+  height: 48px;
+  width: 48px;
+  align-items: center;
+  color: white;
+  margin: 0.7rem;
+}
+
+.brandName {
+  padding: 0 1rem;
+}
+
+.accountIcon {
+  height: 48px;
+  width: 48px;
+  align-items: center;
+  color: white;
+  border-radius: 0.5rem;
+  align-self: center;
+  margin: 0.7rem;
+  cursor: pointer;
+  display: none;
+
+  &:hover {
+    background-color: #43355A;
+    transition: all 0.2s ease-in-out
+  }
+}
+
+.navButtons {
+  display: none;
+  /*padding: 0.5rem 0;*/
+  margin: 0.7rem 0;
+}
+
+.loginButton {
+  padding: 0.45rem 2rem;
+  margin-right: 0.7rem;
+  border-radius: 0.5rem;
+  color: black;
+  background-color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  border: solid;
+  border-color: #43355A;
+  &:hover {
+    background-color: #43355A;
+    color: white;
+    border-color: white;
+    transition: all 0.2s ease-in-out
+  }
+}
+
+.registerButton {
+  padding: 0.7rem 1.8rem;
+  margin: 0;
+  border-radius: 1rem;
+}
+
+.accountButton {
+  padding: 0.5rem;
+  margin: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .menuIcon, .responsiveNavLinks .hiddenLink {
+    display: none;
+  }
+
+  .accountIcon {
+    display: flex;
+  }
+
+  .navLinks {
+    display: flex;
+  }
+}

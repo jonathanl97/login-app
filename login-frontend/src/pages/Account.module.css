@@ -1,0 +1,86 @@
+.accountSettings {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid white;
+  border-radius: 1rem;
+  align-items: start;
+  margin: 4rem 0.7rem;
+  padding: 1rem;
+}
+
+.headerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #EAFDF8;
+}
+
+.changeEmailContainer {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #EAFDF8;
+  width: 100%;
+  text-align: left;
+  align-items: center;
+}
+
+.changePasswordContainer {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #EAFDF8;
+  margin-bottom: 1rem;
+  width: 100%;
+  text-align: left;
+}
+
+.deleteAccountContainer {
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+}
+
+.deleteAccount {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.button {
+  color: white;
+  background-color: black;
+  border: none;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 24px;
+  height: 2em;
+  padding: 0 1rem;
+  width: 8rem;
+
+  cursor: pointer;
+  &:hover {
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.signOutButton {
+  composes: button;
+  background-color: #7D65A4;
+
+  &:hover {
+    background-color: #43355A;
+  }
+}
+
+.deleteButton {
+  composes: button;
+  background-color: #a30000;
+  
+  &:hover {
+    background-color: #770000;
+  }
+}
