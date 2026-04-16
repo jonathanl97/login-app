@@ -1,5 +1,5 @@
 import { pool } from "./db.js";
-
+import { hashPassword } from "./utils/helper.js";
 
 const getUsers = async (request, response) => {
   try {
@@ -24,10 +24,12 @@ const getUserById = async (request, response) => {
 const createUser = async (request, response) => {
   const { email, password } = request.body;
 
+  const hashedPassword = hashPassword(password);
+
   try {
     const results = await pool.query(
       'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *',
-      [email, password]
+      [email, hashedPassword]
     );
     response.status(201).send(`User registered with email: ${email}`);
   } catch (error) {

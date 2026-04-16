@@ -1,15 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import styled from "styled-components";
 //
 import PropTypes from "prop-types";
 import Button from "../components/Button";
-
-const StyledDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
 
 async function signinUser(credentials) {
   const response = await fetch('http://localhost:8000/login', {
@@ -55,7 +48,7 @@ export default function Login({ setToken }) {
   //Add "create account form" and split the view in half.
   return (
     <>
-      <StyledDiv>
+      <div>
         <h1>Sign in</h1>
         <form onSubmit={handleSubmit} >
           <label>
@@ -88,7 +81,7 @@ export default function Login({ setToken }) {
             */}
           </div>
         </form>
-      </StyledDiv>
+      </div>
     </>
   )
 }
