@@ -187,7 +187,7 @@ export default function Signin() {
               type="button" 
               onClick={() => setNewUser(!newUser)}
             >
-              {newUser ? "Already have an account?" : "Create an account"}
+              {newUser ? "Already have an account?" : "Create an account?"}
             </button>
             {/*
             <button 

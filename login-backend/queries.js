@@ -1,5 +1,5 @@
 import { pool } from "./db.js";
-import { hashPassword } from "./utils/helper.js";
+import bcrypt from 'bcrypt';
 
 const getUsers = async (request, response) => {
   try {
@@ -24,17 +24,20 @@ const getUserById = async (request, response) => {
 const createUser = async (request, response) => {
   const { email, password } = request.body;
 
-  const hashedPassword = hashPassword(password);
-
-  try {
-    const results = await pool.query(
-      'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *',
-      [email, hashedPassword]
-    );
-    response.status(201).send(`User registered with email: ${email}`);
-  } catch (error) {
-    throw error;
-  };
+  bcrypt.genSalt(function(err, salt) {
+    bcrypt.hash(password, salt,  function(err, hash) {
+      //Error handling
+      try {
+        pool.query(
+          'INSERT INTO users (email, password, salt) VALUES ($1, $2, $3)',
+          [email, hash, salt]
+        );
+        response.status(201).send(`User registered with email: ${email}`);
+      } catch (error) {
+        throw error;
+      };
+    });
+  }); 
 };
 
 const updateUserEmail = async (request, response) => {

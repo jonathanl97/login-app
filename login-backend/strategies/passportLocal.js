@@ -13,7 +13,7 @@ passport.use(new LocalStrategy(function verify(email, password, cb) {
       if (err) { return cb(err); }
       if (!res) { return cb(null, false, { message: 'Incorrect email or password.' }); }
 
-      return cb(null, row.email);
+      return cb(null, res); //return cb(null, row.email);??
     });
   });
 }));
