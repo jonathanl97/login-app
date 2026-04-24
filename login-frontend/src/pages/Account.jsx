@@ -8,18 +8,19 @@ import ChangePasswordForm from '../features/ChangePassword';
 export default function Account({ removeToken }) {
   const [showModal, setShowModal] = useState(false);
 
-  //const navigate = useNavigate();
-
+  /*
+  const navigate = useNavigate();
   const handleLogout = () => {
     removeToken();
-    //navigate('/login');
+    navigate('/login');
   };
+  */
 
   return(
     <div className={styles.accountSettings}>
       <div className={styles.headerContainer}>
         <h1>Account</h1>
-        <button 
+        <button
           className={styles.signOutButton}
           onClick={handleLogout}
         >
@@ -28,14 +29,14 @@ export default function Account({ removeToken }) {
       </div>
       <div className={styles.changeEmailContainer}>
         
-        {/*Hide if logged out, incase routing fails.*/}
+        {/*Hide if logged out.*/}
         <ChangeEmailForm />
 
       </div>
 
       <div className={styles.changePasswordContainer}>
         
-        {/*Hide if logged out, incase routing fails.*/}
+        {/*Hide if logged out.*/}
         <ChangePasswordForm />
 
       </div>
@@ -45,7 +46,7 @@ export default function Account({ removeToken }) {
         <div className={styles.deleteAccount}>
           <p>Delete account?</p>
 
-          {/*Hide if logged out, incase routing fails.*/}
+          {/*Hide if logged out.*/}
           <button 
             className={styles.deleteButton}
             onClick={() => setShowModal(true)}

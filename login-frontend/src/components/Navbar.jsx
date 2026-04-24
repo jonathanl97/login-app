@@ -18,7 +18,7 @@ export default function Navbar() {
     <nav className={styles.navbar}>
       <Link to="/" className={styles.brand} onClick={() => setMenuOpen(false)}>
           <HomeIcon className={styles.logo} />
-          <h1 className={styles.brandName}>Name</h1>
+          <h1 className={styles.brandName}>Placeholder</h1>
       </Link>
       <ul className={menuOpen ? styles.responsiveNavLinks : styles.navLinks}>
         <li>
@@ -67,9 +67,6 @@ export default function Navbar() {
       <div className={styles.menuIcon} onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? <XMarkIcon /> : <Bars3Icon /> }
       </div>
-      {/*<div className={styles.navButtons}>
-        <button className={styles.loginButton}>Sign in</button>
-      </div>*/}
       <NavLink to="/account" 
         style={({ isActive }) => ({
           backgroundColor: isActive ? "#43355A" : "",

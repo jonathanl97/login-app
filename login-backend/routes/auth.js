@@ -1,13 +1,14 @@
 import express from 'express';
 import passport from 'passport';
 
-//passport
-let router = express.Router();
+const router = express.Router();
 
 //sign up
 
 //sign in
-router.post('signin', passport.authenticate('local', {
+
+//fix this. return response/redirect to dashboard etc.
+router.post('/signin', passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/signin'
 }));
@@ -19,3 +20,5 @@ router.post('signin', passport.authenticate('local', {
 //update password
 
 //delete account
+
+export default router;

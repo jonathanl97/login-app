@@ -4,7 +4,8 @@ import { EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { validateEmail, validatePassword } from "../features/ValidateCredentials";
 
 async function signinUser(credentials) {
-  const response = await fetch('http://localhost:8080/users/signin', {
+  console.log(JSON.stringify(credentials));
+  const response = await fetch('http://localhost:8080/signin', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -13,7 +14,17 @@ async function signinUser(credentials) {
     body: JSON.stringify(credentials)
   });
 
-  console.log(response)
+  console.log(response);
+
+  /*
+  if (!response.ok) {
+    throw new Error(`Login failed: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data;
+  */
+ 
   // handle response
 };
 
@@ -189,15 +200,6 @@ export default function Signin() {
             >
               {newUser ? "Already have an account?" : "Create an account?"}
             </button>
-            {/*
-            <button 
-              className={styles.button}
-              onClick={handleSubmitRegister} 
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Register" }
-            </button>
-            */}
           </div>
         </form>
       </div>

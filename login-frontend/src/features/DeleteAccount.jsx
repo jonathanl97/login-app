@@ -47,9 +47,6 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
         setLoading(false);
       };
     }
-    
-    //check token, email, password to confirm current user
-    //refresh/redirect to login
   };
   
   const handleEmailBlur = () => {
