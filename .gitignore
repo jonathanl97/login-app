@@ -26,3 +26,5 @@ dist-ssr
 *.env
 
 Todo.md
+
+*.prettierignore

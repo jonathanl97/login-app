@@ -1,4 +1,3 @@
-
 //Not currently used.
 
 import { useState } from "react";
@@ -6,7 +5,7 @@ import { useState } from "react";
 
 export default function useToken() {
   const getToken = () => {
-    const tokenString = sessionStorage.getItem('token');
+    const tokenString = sessionStorage.getItem("token");
     if (!tokenString) {
       return null;
     }
@@ -14,7 +13,8 @@ export default function useToken() {
     const userToken = JSON.parse(tokenString);
     return userToken?.token;
 
-    {/*
+    {
+      /*
     if (!token) {
       return null;
     }
@@ -33,26 +33,25 @@ export default function useToken() {
       sessionStorage.removeItem('token');
       return null;
     }
-    */}
+    */
+    }
   };
 
   const [token, setToken] = useState(getToken());
 
-  const saveToken = userToken => {
-    sessionStorage.setItem('token', JSON.stringify(userToken))
-    setToken(userToken.token)
+  const saveToken = (userToken) => {
+    sessionStorage.setItem("token", JSON.stringify(userToken));
+    setToken(userToken.token);
   };
 
-  
   const removeToken = () => {
-    sessionStorage.removeItem('token');
+    sessionStorage.removeItem("token");
     setToken(null);
-  }
-  
+  };
 
   return {
-    setToken: saveToken, 
+    setToken: saveToken,
     token,
-    removeToken
-  }
+    removeToken,
+  };
 }

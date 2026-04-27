@@ -1,7 +1,13 @@
 import { useState } from "react";
-import styles from "./Navbar.module.css"
+import styles from "./Navbar.module.css";
 import { Link, NavLink } from "react-router";
-import { Bars3Icon, XMarkIcon, HomeIcon, UserCircleIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import {
+  Bars3Icon,
+  XMarkIcon,
+  HomeIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,20 +15,21 @@ export default function Navbar() {
   window.onresize = function () {
     var w = window.outerWidth;
 
-    if ( w > 768 ) {
+    if (w > 768) {
       setMenuOpen(false);
     }
-  }
+  };
 
   return (
     <nav className={styles.navbar}>
       <Link to="/" className={styles.brand} onClick={() => setMenuOpen(false)}>
-          <HomeIcon className={styles.logo} />
-          <h1 className={styles.brandName}>Placeholder</h1>
+        <HomeIcon className={styles.logo} />
+        <h1 className={styles.brandName}>Placeholder</h1>
       </Link>
       <ul className={menuOpen ? styles.responsiveNavLinks : styles.navLinks}>
         <li>
-          <NavLink to="/"
+          <NavLink
+            to="/"
             style={({ isActive }) => ({
               backgroundColor: isActive ? "#43355A" : "",
             })}
@@ -33,7 +40,8 @@ export default function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/signin"
+          <NavLink
+            to="/signin"
             style={({ isActive }) => ({
               backgroundColor: isActive ? "#43355A" : "",
             })}
@@ -44,20 +52,22 @@ export default function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/about"
+          <NavLink
+            to="/about"
             style={({ isActive }) => ({
               backgroundColor: isActive ? "#43355A" : "",
             })}
-            onClick={() => setMenuOpen(false)} 
+            onClick={() => setMenuOpen(false)}
             className={styles.navLinksIndividual}
           >
             About
           </NavLink>
-          <NavLink to="/account"
+          <NavLink
+            to="/account"
             style={({ isActive }) => ({
               backgroundColor: isActive ? "#43355A" : "",
             })}
-            onClick={() => setMenuOpen(false)} 
+            onClick={() => setMenuOpen(false)}
             className={menuOpen ? styles.navLinksIndividual : styles.hiddenLink}
           >
             Account
@@ -65,16 +75,17 @@ export default function Navbar() {
         </li>
       </ul>
       <div className={styles.menuIcon} onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? <XMarkIcon /> : <Bars3Icon /> }
+        {menuOpen ? <XMarkIcon /> : <Bars3Icon />}
       </div>
-      <NavLink to="/account" 
+      <NavLink
+        to="/account"
         style={({ isActive }) => ({
           backgroundColor: isActive ? "#43355A" : "",
         })}
         className={styles.accountIcon}
-        >
+      >
         <UserCircleIcon />
       </NavLink>
     </nav>
-  )
+  );
 }

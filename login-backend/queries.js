@@ -1,40 +1,42 @@
 import { pool } from "./db.js";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 const signInUser = async (request, response) => {
-  response.json('test');
-  
+  response.json("test");
 };
 
 const createUser = async (request, response) => {
   const { email, password } = request.body;
 
-  bcrypt.genSalt(function(err, salt) {
-    bcrypt.hash(password, salt,  function(err, hash) {
+  bcrypt.genSalt(function (err, salt) {
+    bcrypt.hash(password, salt, function (err, hash) {
       //Error handling
       try {
-        pool.query(
-          'INSERT INTO users (email, password) VALUES ($1, $2)',
-          [email, hash]
-        );
+        pool.query("INSERT INTO users (email, password) VALUES ($1, $2)", [
+          email,
+          hash,
+        ]);
         response.status(201).send(`User registered with email: ${email}`);
       } catch (error) {
         throw error;
-      };
+      }
     });
-  }); 
+  });
 };
 
 const updateUserEmail = async (request, response) => {
-  const { newEmail, oldEmail, password } = request.body
+  const { newEmail, oldEmail, password } = request.body;
 
   try {
-    await pool.query('UPDATE users SET email=$1 WHERE email=$2 AND password=$3', 
-      [newEmail, oldEmail, password]
-    )
-    response.status(200).send(`Email updated from: ${oldEmail} to: ${newEmail}`)
+    await pool.query(
+      "UPDATE users SET email=$1 WHERE email=$2 AND password=$3",
+      [newEmail, oldEmail, password],
+    );
+    response
+      .status(200)
+      .send(`Email updated from: ${oldEmail} to: ${newEmail}`);
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
@@ -42,13 +44,14 @@ const updateUserPassword = async (request, response) => {
   const { newPassword, email, oldPassword } = request.body;
 
   try {
-    await pool.query('UPDATE users SET password=$1 WHERE email=$2 AND password=$3',
-      [newPassword, email, oldPassword]
+    await pool.query(
+      "UPDATE users SET password=$1 WHERE email=$2 AND password=$3",
+      [newPassword, email, oldPassword],
     );
     response.status(200).send(`Password updated for account: ${email}`);
   } catch (error) {
     throw error;
-  };
+  }
 };
 
 const deleteUser = async (request, response) => {
@@ -56,11 +59,14 @@ const deleteUser = async (request, response) => {
   const { email, password } = request.body;
 
   try {
-    await pool.query('DELETE FROM users WHERE email=$1 AND password=$2', [email, password]);
+    await pool.query("DELETE FROM users WHERE email=$1 AND password=$2", [
+      email,
+      password,
+    ]);
     response.status(200).send(`User deleted with email: ${email}`);
   } catch (error) {
     throw error;
-  };
+  }
 };
 
 export {

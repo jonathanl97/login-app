@@ -5,9 +5,9 @@
   margin: 0 0.7rem;
   border-radius: 1rem;
   border: 2px solid white;
-  background-color: #7D65A4;
+  background-color: #7d65a4;
   color: white;
-  box-shadow: 0 -0.5rem 1rem 2rem #1E1A23;
+  box-shadow: 0 -0.5rem 1rem 2rem #1e1a23;
   display: flex;
   justify-content: space-between;
   z-index: 100;
@@ -23,8 +23,8 @@
   cursor: pointer;
 
   &:hover {
-    background-color: #43355A;
-    transition: all 0.2s ease-in-out
+    background-color: #43355a;
+    transition: all 0.2s ease-in-out;
   }
 }
 
@@ -38,7 +38,7 @@
   padding: 1rem 0;
   right: 0;
   margin: 0;
-  background-color: #7D65A4;
+  background-color: #7d65a4;
   position: absolute;
   top: 62px;
   border: 2px white;
@@ -65,8 +65,8 @@
   width: 100px;
 
   &:hover {
-    background-color: #43355A;
-    transition: all 0.2s ease-in-out
+    background-color: #43355a;
+    transition: all 0.2s ease-in-out;
   }
 }
 
@@ -105,8 +105,8 @@
   display: none;
 
   &:hover {
-    background-color: #43355A;
-    transition: all 0.2s ease-in-out
+    background-color: #43355a;
+    transition: all 0.2s ease-in-out;
   }
 }
 
@@ -125,12 +125,12 @@
   font-size: 1rem;
   font-weight: 500;
   border: solid;
-  border-color: #43355A;
+  border-color: #43355a;
   &:hover {
-    background-color: #43355A;
+    background-color: #43355a;
     color: white;
     border-color: white;
-    transition: all 0.2s ease-in-out
+    transition: all 0.2s ease-in-out;
   }
 }
 
@@ -146,7 +146,8 @@
 }
 
 @media screen and (min-width: 768px) {
-  .menuIcon, .responsiveNavLinks .hiddenLink {
+  .menuIcon,
+  .responsiveNavLinks .hiddenLink {
     display: none;
   }
 

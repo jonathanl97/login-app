@@ -1,10 +1,9 @@
 export default function About() {
-
-  return(
+  return (
     <div>
       <section>
-          <h1 style={{marginTop: 60, marginBottom: 40}}>About</h1>
+        <h1 style={{ marginTop: 60, marginBottom: 40 }}>About</h1>
       </section>
     </div>
-  )
+  );
 }

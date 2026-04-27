@@ -1,5 +1,5 @@
-import express from 'express';
-import passport from 'passport';
+import express from "express";
+import passport from "passport";
 
 const router = express.Router();
 
@@ -8,10 +8,13 @@ const router = express.Router();
 //sign in
 
 //fix this. return response/redirect to dashboard etc.
-router.post('/signin', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/signin'
-}));
+router.post(
+  "/signin",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/signin",
+  }),
+);
 
 //sign out
 
