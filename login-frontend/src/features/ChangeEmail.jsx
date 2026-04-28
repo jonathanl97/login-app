@@ -4,7 +4,7 @@ import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { validateEmail, validatePassword } from "./ValidateCredentials";
 
 async function changeEmail(credentials) {
-  await fetch("http://localhost:8080/users/email", {
+  await fetch("http://localhost:8080/user/email", {
     method: "PUT",
     headers: {
       Accept: "application/json",

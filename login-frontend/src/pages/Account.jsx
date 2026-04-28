@@ -5,6 +5,16 @@ import DeleteAccountModal from "../features/DeleteAccount";
 import ChangeEmailForm from "../features/ChangeEmail";
 import ChangePasswordForm from "../features/ChangePassword";
 
+async function signOutUser() {
+  await fetch("http://localhost:8080/signout", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+}
+
 export default function Account({ removeToken }) {
   const [showModal, setShowModal] = useState(false);
 
@@ -16,11 +26,20 @@ export default function Account({ removeToken }) {
   };
   */
 
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+    } catch (error) {
+      throw error;
+    }
+    console.log("Signed out.");
+  };
+
   return (
     <div className={styles.accountSettings}>
       <div className={styles.headerContainer}>
         <h1>Account</h1>
-        <button className={styles.signOutButton} onClick={handleLogout}>
+        <button className={styles.signOutButton} onClick={handleSignOut}>
           Sign out
         </button>
       </div>

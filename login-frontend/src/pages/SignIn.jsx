@@ -32,7 +32,7 @@ async function signinUser(credentials) {
 }
 
 async function registerUser(credentials) {
-  const response = await fetch("http://localhost:8080/users/register", {
+  const response = await fetch("http://localhost:8080/register", {
     method: "POST",
     headers: {
       Accept: "application/json",

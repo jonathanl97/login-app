@@ -23,6 +23,8 @@ const authenticateUser = async (email, password, done) => {
           return done(null, false, { message: "Incorrect email or password." });
         }
       });
+    } else {
+      return done(null, false, { message: "Incorrect email or password." });
     }
   } catch (err) {
     console.err("Error during authentication", err);

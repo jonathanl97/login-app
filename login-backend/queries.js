@@ -1,10 +1,13 @@
-import { pool } from "./db.js";
-import bcrypt from "bcrypt";
+//import { pool } from "./db.js";
+//import bcrypt from "bcrypt";
 
+/*
 const signInUser = async (request, response) => {
   response.json("test");
 };
+*/
 
+/*
 const createUser = async (request, response) => {
   const { email, password } = request.body;
 
@@ -23,7 +26,9 @@ const createUser = async (request, response) => {
     });
   });
 };
+*/
 
+/*
 const updateUserEmail = async (request, response) => {
   const { newEmail, oldEmail, password } = request.body;
 
@@ -39,7 +44,9 @@ const updateUserEmail = async (request, response) => {
     throw error;
   }
 };
+*/
 
+/*
 const updateUserPassword = async (request, response) => {
   const { newPassword, email, oldPassword } = request.body;
 
@@ -53,7 +60,9 @@ const updateUserPassword = async (request, response) => {
     throw error;
   }
 };
+*/
 
+/*
 const deleteUser = async (request, response) => {
   //const id = parseInt(request.params.id, 10);
   const { email, password } = request.body;
@@ -68,7 +77,9 @@ const deleteUser = async (request, response) => {
     throw error;
   }
 };
+*/
 
+/*
 export {
   signInUser,
   createUser,
@@ -76,3 +87,4 @@ export {
   updateUserPassword,
   deleteUser,
 };
+*/
