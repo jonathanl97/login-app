@@ -40,28 +40,48 @@ router.post("/register", async (req, res) => {
 
 //sign in
 //fix this. return response/redirect to dashboard etc.
-router.post("/signin", passport.authenticate("local"), (req, res) => {
-  res.send(req.user);
+router.post("/signin", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      console.log("user not found");
+      //return err; //change to redirect to login
+    }
+
+    req.logIn(user, function (err) {
+      if (err) {
+        return next(err);
+      }
+
+      return res.send(user);
+    });
+    console.log(req.user);
+  })(req, res, next);
 });
 
 //sign out
 //remove cookie, redirect to login page or home page. not yet working.
 router.get("/signout", (req, res, next) => {
+  console.log(req.user);
   req.logOut(function (err) {
     if (err) return next(err);
+    console.log(req.user);
   });
 });
 
 //update email
-//check cookie, update email for user
-router.put("/user/email", async (req, res) => {
+//check cookie, checkAuthenticated update email for user
+router.put("/user/email", checkAuthenticated, async (req, res) => {
   const { newEmail, oldEmail, password } = req.body;
 
   try {
-    await pool.query(
-      "UPDATE users SET email=$1 WHERE email=$2 AND password=$3",
-      [newEmail, oldEmail, password],
-    );
+    await pool.query("UPDATE users SET email=$1 WHERE email=$2", [
+      newEmail,
+      oldEmail,
+    ]);
     res.status(200).send(`Email updated from: ${oldEmail} to: ${newEmail}`);
   } catch (err) {
     throw err;
@@ -69,40 +89,55 @@ router.put("/user/email", async (req, res) => {
 });
 
 //update password
-//check cookie, update password for user
-router.put("/user/password", async (req, res) => {
+//checkauthenticated
+router.put("/user/password", checkAuthenticated, async (req, res) => {
   const { newPassword, email, oldPassword } = req.body;
 
+  const results = await pool.query("SELECT * FROM users WHERE email=$1", [
+    email,
+  ]);
+
+  if (results.rows.length > 0) {
+    const user = results.rows[0];
+
+    //bcrypt
+    bcrypt.genSalt(function (err, salt) {
+      bcrypt.hash(newPassword, salt, async function (err, hash) {
+        try {
+          await pool.query("UPDATE users SET password=$1 WHERE email=$2", [
+            hash,
+            email,
+          ]);
+          res.status(200).send(`Password updated for account: ${email}`);
+        } catch (err) {
+          throw err;
+        }
+      });
+    });
+  }
+});
+
+//delete account
+//checkauthenticated
+router.delete("/user/delete", checkAuthenticated, async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    await pool.query(
-      "UPDATE users SET password=$1 WHERE email=$2 AND password=$3",
-      [newPassword, email, oldPassword],
-    );
-    res.status(200).send(`Password updated for account: ${email}`);
+    await pool.query("DELETE FROM users WHERE email=$1", [email]);
+    res.status(200).send(`User deleted with email: ${email}`);
   } catch (err) {
     throw err;
   }
 });
 
-//delete account
-//check cookie, delete user
-router.delete("/user/delete", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    await pool.query("DELETE FROM users WHERE email=$1 AND password=$2", [
-      email,
-      password,
-    ]);
-    res.status(200).send(`User deleted with email: ${email}`);
-  } catch (error) {
-    throw error;
-  }
-});
-
 //
 function checkAuthenticated(req, res) {
+  console.log("before auth");
   if (req.isAuthenticated()) {
+    console.log("aftera auth");
+    next();
+  } else {
+    console.log("not authenticated");
   }
 }
 
