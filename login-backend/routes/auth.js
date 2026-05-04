@@ -56,6 +56,7 @@ router.post("/signin", (req, res, next) => {
         return next(err);
       }
 
+      //change
       return res.send(user);
     });
     console.log(req.user);
@@ -122,6 +123,8 @@ router.put("/user/password", checkAuthenticated, async (req, res) => {
 router.delete("/user/delete", checkAuthenticated, async (req, res) => {
   const { email, password } = req.body;
 
+  //sign out user and delete/expire session+cookie
+
   try {
     await pool.query("DELETE FROM users WHERE email=$1", [email]);
     res.status(200).send(`User deleted with email: ${email}`);
@@ -131,13 +134,12 @@ router.delete("/user/delete", checkAuthenticated, async (req, res) => {
 });
 
 //
-function checkAuthenticated(req, res) {
-  console.log("before auth");
+function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    console.log("aftera auth");
     next();
   } else {
     console.log("not authenticated");
+    //add error
   }
 }
 

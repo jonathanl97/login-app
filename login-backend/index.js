@@ -13,35 +13,16 @@ const pgSession = connectPgSimple(session);
 const app = express();
 const port = Number(process.env.EX_PORT);
 
-//not finished
-/*
-const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      "http://localhost:5173/",
-      //"http://localhost:5173/signin",
-      "http://localhost:8080/",
-      //"http://localhost:8080/signin",
-    ];
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
 
-    
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      //callback(new Error("Not allowed by cors"));
-    }
-    
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-*/
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
 
-//app.use(cors(corsOptions));
-
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -57,7 +38,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
+      //maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 60,
     },
   }),
 );
@@ -66,9 +48,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", authRouter);
-
-//not finished
-//app.options(cors(corsOptions));
 
 app.listen(port, () => {
   console.log(`Api runnning on port ${port}.`);

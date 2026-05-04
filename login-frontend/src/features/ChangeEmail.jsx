@@ -5,6 +5,7 @@ import { validateEmail, validatePassword } from "./ValidateCredentials";
 
 async function changeEmail(credentials) {
   await fetch("http://localhost:8080/user/email", {
+    credentials: "include",
     method: "PUT",
     headers: {
       Accept: "application/json",

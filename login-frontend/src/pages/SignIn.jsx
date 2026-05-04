@@ -9,7 +9,7 @@ import {
 async function signinUser(credentials) {
   console.log(JSON.stringify(credentials));
   const response = await fetch("http://localhost:8080/signin", {
-    //credentials: "include",
+    credentials: "include",
     method: "POST",
     headers: {
       Accept: "application/json",

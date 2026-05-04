@@ -6,6 +6,7 @@ import { validateEmail, validatePassword } from "./ValidateCredentials";
 
 async function deleteUser(credentials) {
   await fetch("http://localhost:8080/user/delete", {
+    credentials: "include",
     method: "DELETE",
     headers: {
       Accept: "application/json",
