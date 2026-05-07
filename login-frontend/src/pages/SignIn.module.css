@@ -47,6 +47,14 @@
   padding: 0 34px 0 34px;
 }
 
+.inputAreaName {
+  composes: inputArea;
+  background-image: url("../assets/name.svg");
+  background-size: 24px;
+  background-position: 5px;
+  background-repeat: no-repeat;
+}
+
 .inputAreaEmail {
   composes: inputArea;
   background-image: url("../assets/email.svg");

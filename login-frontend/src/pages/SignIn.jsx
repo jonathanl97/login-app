@@ -34,6 +34,7 @@ async function signinUser(credentials) {
 
 async function registerUser(credentials) {
   const response = await fetch("http://localhost:8080/register", {
+    credentials: "include",
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -54,6 +55,7 @@ async function registerUser(credentials) {
 }
 
 export default function Signin() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
@@ -100,6 +102,7 @@ export default function Signin() {
       console.log("Registering");
       try {
         await registerUser({
+          name,
           email,
           password,
         });
@@ -151,6 +154,25 @@ export default function Signin() {
           className={styles.form}
           onSubmit={newUser ? handleSubmitRegister : handleSubmitSignin}
         >
+          {newUser && (
+            <label className={styles.label}>
+              <p className={styles.text}>Name:</p>
+              <input
+                //optional?
+                className={styles.inputAreaName}
+                type="text"
+                placeholder="John Doe"
+                maxLength={32}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={loading}
+              />
+              {touched && emailError && (
+                <div className={styles.errorText}>{emailError}</div>
+              )}
+            </label>
+          )}
+
           <label className={styles.label}>
             <p className={styles.text}>Email:</p>
             <input

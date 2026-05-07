@@ -51,8 +51,6 @@ function initializePassport(passport) {
       if (err) {
         throw err;
       }
-      console.log("deserialize user:");
-      console.log(results.rows[0]);
       return done(null, results.rows[0]);
     });
   });

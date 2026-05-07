@@ -7,8 +7,8 @@ const router = express.Router();
 
 //sign up
 //redirect to login
-router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+router.post("/register", async (req, res, next) => {
+  const { name, email, password } = req.body;
 
   try {
     const existingUser = await pool.query(
@@ -23,11 +23,22 @@ router.post("/register", async (req, res) => {
     bcrypt.genSalt(function (err, salt) {
       bcrypt.hash(password, salt, async function (err, hash) {
         try {
-          await pool.query(
-            "INSERT INTO users (email, password) VALUES ($1, $2)",
-            [email, hash],
+          const response = await pool.query(
+            "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, email AS username",
+            [name, email, hash],
           );
-          res.status(201).send(`User registered with email: ${email}`);
+          const user = {
+            id: response.rows[0].id,
+            username: response.rows[0].username,
+          };
+          req.logIn(user, function (err) {
+            if (err) {
+              return next(err);
+            }
+            res
+              .status(201)
+              .send(`User registered and signed in with email: ${email}`);
+          });
         } catch (err) {
           throw err;
         }
@@ -48,7 +59,7 @@ router.post("/signin", (req, res, next) => {
 
     if (!user) {
       console.log("user not found");
-      //return err; //change to redirect to login
+      //return err; //change to redirect to login/register
     }
 
     req.logIn(user, function (err) {
@@ -57,24 +68,22 @@ router.post("/signin", (req, res, next) => {
       }
 
       //change
-      return res.send(user);
+      //return res.send("signed in");
     });
-    console.log(req.user);
   })(req, res, next);
 });
 
-//sign out
+//sign out //fix this
 //remove cookie, redirect to login page or home page. not yet working.
-router.get("/signout", (req, res, next) => {
-  console.log(req.user);
+router.post("/signout", (req, res, next) => {
   req.logOut(function (err) {
     if (err) return next(err);
-    console.log(req.user);
   });
+  res.redirect("/");
+  //res.clearCookie("connect.sid");
 });
 
 //update email
-//check cookie, checkAuthenticated update email for user
 router.put("/user/email", checkAuthenticated, async (req, res) => {
   const { newEmail, oldEmail, password } = req.body;
 
@@ -90,7 +99,6 @@ router.put("/user/email", checkAuthenticated, async (req, res) => {
 });
 
 //update password
-//checkauthenticated
 router.put("/user/password", checkAuthenticated, async (req, res) => {
   const { newPassword, email, oldPassword } = req.body;
 
@@ -119,7 +127,6 @@ router.put("/user/password", checkAuthenticated, async (req, res) => {
 });
 
 //delete account
-//checkauthenticated
 router.delete("/user/delete", checkAuthenticated, async (req, res) => {
   const { email, password } = req.body;
 
@@ -141,6 +148,12 @@ function checkAuthenticated(req, res, next) {
     console.log("not authenticated");
     //add error
   }
+}
+
+async function verifyPassword(email, password) {
+  const correctUser = await pool.query("SELECT * FROM users WHERE email=$1", [
+    email,
+  ]);
 }
 
 export default router;

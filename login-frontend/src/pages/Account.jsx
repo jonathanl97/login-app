@@ -7,7 +7,8 @@ import ChangePasswordForm from "../features/ChangePassword";
 
 async function signOutUser() {
   await fetch("http://localhost:8080/signout", {
-    method: "GET",
+    credentials: "include",
+    method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -15,13 +16,12 @@ async function signOutUser() {
   });
 }
 
-export default function Account({ removeToken }) {
+export default function Account() {
   const [showModal, setShowModal] = useState(false);
 
   /*
   const navigate = useNavigate();
   const handleLogout = () => {
-    removeToken();
     navigate('/login');
   };
   */
