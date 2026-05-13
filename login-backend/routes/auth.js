@@ -68,7 +68,7 @@ router.post("/signin", (req, res, next) => {
       }
 
       //change
-      //return res.send("signed in");
+      return res.send("signed in");
     });
   })(req, res, next);
 });
@@ -83,18 +83,32 @@ router.post("/signout", (req, res, next) => {
   //res.clearCookie("connect.sid");
 });
 
+//get account/user name
+router.post("/account", checkAuthenticated, async (req, res) => {
+  const results = await pool.query("SELECT name FROM users WHERE id=$1", [
+    req.user.id,
+  ]);
+  res.json(results.rows[0].name);
+});
+
 //update email
 router.put("/user/email", checkAuthenticated, async (req, res) => {
   const { newEmail, oldEmail, password } = req.body;
 
-  try {
-    await pool.query("UPDATE users SET email=$1 WHERE email=$2", [
-      newEmail,
-      oldEmail,
-    ]);
-    res.status(200).send(`Email updated from: ${oldEmail} to: ${newEmail}`);
-  } catch (err) {
-    throw err;
+  const { id, isMatch } = await verifyUser(oldEmail, password);
+
+  if (id == req.user.id && isMatch) {
+    try {
+      await pool.query("UPDATE users SET email=$1 WHERE email=$2", [
+        newEmail,
+        oldEmail,
+      ]);
+      res.status(200).send(`Email updated from: ${oldEmail} to: ${newEmail}`);
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    res.send("Incorrect credentials");
   }
 });
 
@@ -102,27 +116,37 @@ router.put("/user/email", checkAuthenticated, async (req, res) => {
 router.put("/user/password", checkAuthenticated, async (req, res) => {
   const { newPassword, email, oldPassword } = req.body;
 
-  const results = await pool.query("SELECT * FROM users WHERE email=$1", [
-    email,
-  ]);
+  const { id, isMatch } = await verifyUser(email, oldPassword);
 
-  if (results.rows.length > 0) {
-    const user = results.rows[0];
+  if (id == req.user.id && isMatch) {
+    try {
+      const results = await pool.query("SELECT * FROM users WHERE email=$1", [
+        email,
+      ]);
 
-    //bcrypt
-    bcrypt.genSalt(function (err, salt) {
-      bcrypt.hash(newPassword, salt, async function (err, hash) {
-        try {
-          await pool.query("UPDATE users SET password=$1 WHERE email=$2", [
-            hash,
-            email,
-          ]);
-          res.status(200).send(`Password updated for account: ${email}`);
-        } catch (err) {
-          throw err;
-        }
-      });
-    });
+      if (results.rows.length > 0) {
+        const user = results.rows[0];
+
+        //bcrypt
+        bcrypt.genSalt(function (err, salt) {
+          bcrypt.hash(newPassword, salt, async function (err, hash) {
+            try {
+              await pool.query("UPDATE users SET password=$1 WHERE email=$2", [
+                hash,
+                email,
+              ]);
+              res.status(200).send(`Password updated for account: ${email}`);
+            } catch (err) {
+              throw err;
+            }
+          });
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    res.send("Incorrect credentials");
   }
 });
 
@@ -132,11 +156,17 @@ router.delete("/user/delete", checkAuthenticated, async (req, res) => {
 
   //sign out user and delete/expire session+cookie
 
-  try {
-    await pool.query("DELETE FROM users WHERE email=$1", [email]);
-    res.status(200).send(`User deleted with email: ${email}`);
-  } catch (err) {
-    throw err;
+  const { id, isMatch } = await verifyUser(email, password);
+
+  if (id == req.user.id && isMatch) {
+    try {
+      await pool.query("DELETE FROM users WHERE email=$1", [email]);
+      res.status(200).send(`User deleted with email: ${email}`);
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    res.send("Incorrect credentials");
   }
 });
 
@@ -150,10 +180,32 @@ function checkAuthenticated(req, res, next) {
   }
 }
 
-async function verifyPassword(email, password) {
-  const correctUser = await pool.query("SELECT * FROM users WHERE email=$1", [
-    email,
-  ]);
+async function verifyUser(email, password) {
+  try {
+    const results = await pool.query("SELECT * FROM users WHERE email=$1", [
+      email,
+    ]);
+
+    if (results.rows.length > 0) {
+      const user = results.rows[0];
+
+      const match = await bcrypt.compare(password, user.password);
+
+      if (match) {
+        return {
+          id: user.id,
+          isMatch: match,
+        };
+      } else {
+        return {
+          id: -1,
+          isMatch: match,
+        };
+      }
+    }
+  } catch (err) {
+    throw err;
+  }
 }
 
 export default router;

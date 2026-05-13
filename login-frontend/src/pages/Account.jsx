@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styles from "./Account.module.css";
 import DeleteAccountModal from "../features/DeleteAccount";
@@ -19,6 +19,24 @@ async function signOutUser() {
 export default function Account() {
   const [showModal, setShowModal] = useState(false);
 
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    getName().then((result) => setName(result));
+  }, []);
+
+  async function getName() {
+    const response = await fetch("http://localhost:8080/account", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  }
   /*
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -39,6 +57,7 @@ export default function Account() {
     <div className={styles.accountSettings}>
       <div className={styles.headerContainer}>
         <h1>Account</h1>
+        <h1>Hello {name}</h1>
         <button className={styles.signOutButton} onClick={handleSignOut}>
           Sign out
         </button>
