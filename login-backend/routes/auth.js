@@ -6,7 +6,6 @@ import { pool } from "../db.js";
 const router = express.Router();
 
 //sign up
-//redirect to login
 router.post("/register", async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -75,12 +74,12 @@ router.post("/signin", (req, res, next) => {
 
 //sign out //fix this
 //remove cookie, redirect to login page or home page. not yet working.
-router.post("/signout", (req, res, next) => {
+router.post("/signout", async (req, res, next) => {
   req.logOut(function (err) {
     if (err) return next(err);
   });
-  res.redirect("/");
   //res.clearCookie("connect.sid");
+  //res.redirect("/");
 });
 
 //get account/user name
@@ -89,6 +88,14 @@ router.post("/account", checkAuthenticated, async (req, res) => {
     req.user.id,
   ]);
   res.json(results.rows[0].name);
+});
+
+router.post("/authenticated", async (req, res) => {
+  if (req.isAuthenticated()) {
+    res.status(200).send();
+  } else {
+    res.status(400).send();
+  }
 });
 
 //update email
@@ -175,8 +182,7 @@ function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    console.log("not authenticated");
-    //add error
+    //res.status(400).send();
   }
 }
 

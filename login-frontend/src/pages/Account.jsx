@@ -6,6 +6,7 @@ import ChangeEmailForm from "../features/ChangeEmail";
 import ChangePasswordForm from "../features/ChangePassword";
 
 async function signOutUser() {
+  //redirect("/login");
   await fetch("http://localhost:8080/signout", {
     credentials: "include",
     method: "POST",
@@ -16,33 +17,48 @@ async function signOutUser() {
   });
 }
 
+async function checkAuthenticated() {
+  const response = await fetch("http://localhost:8080/authenticated", {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
+
+async function getName() {
+  const response = await fetch("http://localhost:8080/account", {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonResponse = await response.json();
+  return jsonResponse;
+}
+
 export default function Account() {
   const [showModal, setShowModal] = useState(false);
-
   const [name, setName] = useState("");
+  const navigate = useNavigate();
+
+  async function redirectUser() {
+    const response = await checkAuthenticated();
+    if (!response.ok) navigate("/signin");
+  }
+
+  useEffect(() => {
+    redirectUser();
+  }, []);
 
   useEffect(() => {
     getName().then((result) => setName(result));
   }, []);
-
-  async function getName() {
-    const response = await fetch("http://localhost:8080/account", {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    const jsonResponse = await response.json();
-    return jsonResponse;
-  }
-  /*
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    navigate('/login');
-  };
-  */
 
   const handleSignOut = async () => {
     try {
@@ -51,6 +67,12 @@ export default function Account() {
       throw error;
     }
     console.log("Signed out.");
+    /*
+    const navigate = useNavigate();
+    const handleLogout = () => {
+    navigate('/login');
+    };
+    */
   };
 
   return (

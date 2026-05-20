@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./SignIn.module.css";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import {
   validateEmail,
   validatePassword,
 } from "../features/ValidateCredentials";
+import { useNavigate } from "react-router";
 
 async function signinUser(credentials) {
   console.log(JSON.stringify(credentials));
@@ -54,6 +55,18 @@ async function registerUser(credentials) {
   //add response on successful/failed register
 }
 
+async function checkAuthenticated() {
+  const response = await fetch("http://localhost:8080/authenticated", {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
+
 export default function Signin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -64,6 +77,17 @@ export default function Signin() {
   const [loading, setLoading] = useState();
   const [touched, setTouched] = useState();
   const [newUser, setNewUser] = useState(false);
+  const navigate = useNavigate();
+
+  //if signed in, redirect to last path. use history to redirect to path
+  async function redirectUser() {
+    const response = await checkAuthenticated();
+    if (response.ok) navigate("/account");
+  }
+
+  useEffect(() => {
+    redirectUser();
+  }, []);
 
   const handleSubmitSignin = async (e) => {
     e.preventDefault();
@@ -85,6 +109,7 @@ export default function Signin() {
         throw error;
       } finally {
         setLoading(false);
+        navigate("/account");
       }
     }
   };
@@ -110,6 +135,7 @@ export default function Signin() {
         throw error;
       } finally {
         setLoading(false);
+        navigate("/account");
       }
     }
   };
