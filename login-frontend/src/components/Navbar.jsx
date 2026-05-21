@@ -41,7 +41,7 @@ export default function Navbar() {
         </li>
         <li>
           <NavLink
-            to="/signin"
+            to="/content"
             style={({ isActive }) => ({
               backgroundColor: isActive ? "#43355A" : "",
             })}

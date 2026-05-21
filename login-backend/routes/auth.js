@@ -158,10 +158,8 @@ router.put("/user/password", checkAuthenticated, async (req, res) => {
 });
 
 //delete account
-router.delete("/user/delete", checkAuthenticated, async (req, res) => {
+router.delete("/user/delete", checkAuthenticated, async (req, res, next) => {
   const { email, password } = req.body;
-
-  //sign out user and delete/expire session+cookie
 
   const { id, isMatch } = await verifyUser(email, password);
 
@@ -175,6 +173,10 @@ router.delete("/user/delete", checkAuthenticated, async (req, res) => {
   } else {
     res.send("Incorrect credentials");
   }
+
+  req.logOut(function (err) {
+    if (err) return next(err);
+  });
 });
 
 //

@@ -49,16 +49,23 @@ export default function Account() {
 
   async function redirectUser() {
     const response = await checkAuthenticated();
-    if (!response.ok) navigate("/signin");
+    //if (!response.ok) navigate("/signin");
+    if (!response.ok) {
+      navigate("/signin");
+    } else {
+      getName().then((result) => setName(result));
+    }
   }
 
   useEffect(() => {
     redirectUser();
   }, []);
 
+  /*
   useEffect(() => {
     getName().then((result) => setName(result));
   }, []);
+  */
 
   const handleSignOut = async () => {
     try {
