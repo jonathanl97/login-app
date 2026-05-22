@@ -26,7 +26,7 @@ async function checkAuthenticated() {
       "Content-Type": "application/json",
     },
   });
-  return response;
+  return response.ok;
 }
 
 async function getName() {
@@ -47,25 +47,18 @@ export default function Account() {
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    redirectUser();
+  }, []);
+
   async function redirectUser() {
     const response = await checkAuthenticated();
-    //if (!response.ok) navigate("/signin");
-    if (!response.ok) {
+    if (!response) {
       navigate("/signin");
     } else {
       getName().then((result) => setName(result));
     }
   }
-
-  useEffect(() => {
-    redirectUser();
-  }, []);
-
-  /*
-  useEffect(() => {
-    getName().then((result) => setName(result));
-  }, []);
-  */
 
   const handleSignOut = async () => {
     try {
@@ -76,9 +69,7 @@ export default function Account() {
     console.log("Signed out.");
     /*
     const navigate = useNavigate();
-    const handleLogout = () => {
-    navigate('/login');
-    };
+    navigate('/signin');
     */
   };
 

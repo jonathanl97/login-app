@@ -20,16 +20,13 @@ async function signinUser(credentials) {
   });
 
   console.log(response);
-
   /*
   if (!response.ok) {
     throw new Error(`Login failed: ${response.statusText}`);
   }
-
   const data = await response.json();
   return data;
   */
-
   // handle response
 }
 
@@ -51,7 +48,6 @@ async function registerUser(credentials) {
     return ('User registered successfully')
   }
   */
-
   //add response on successful/failed register
 }
 
@@ -64,7 +60,7 @@ async function checkAuthenticated() {
       "Content-Type": "application/json",
     },
   });
-  return response;
+  return response.ok;
 }
 
 export default function Signin() {
@@ -79,15 +75,15 @@ export default function Signin() {
   const [newUser, setNewUser] = useState(false);
   const navigate = useNavigate();
 
-  //if signed in, redirect to last path. use history to redirect to path
-  async function redirectUser() {
-    const response = await checkAuthenticated();
-    if (response.ok) navigate("/account");
-  }
-
   useEffect(() => {
     redirectUser();
   }, []);
+
+  //if signed in, redirect to last path. use history to redirect to path
+  async function redirectUser() {
+    const response = await checkAuthenticated();
+    if (response) navigate("/account");
+  }
 
   const handleSubmitSignin = async (e) => {
     e.preventDefault();
