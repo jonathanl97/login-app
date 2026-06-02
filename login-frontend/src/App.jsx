@@ -5,20 +5,23 @@ import Navbar from "./components/Navbar";
 import About from "./pages/About";
 import Account from "./pages/Account";
 import Content from "./pages/Content";
-import { useContext } from "react";
-import { UserContext } from "./features/UserContext";
+//import { useContext } from "react";
+//import { UserContext } from "./features/UserContext";
+import { AuthProvider } from "./hooks/useAuth";
+import PrivateRoutes from "./features/PrivateRoutes";
 
 //set login status when user logs in or logs out
 //sign in button instead of sign out on account page
 
 function App() {
-  const user = useContext(UserContext);
+  //const user = useContext(UserContext);
   return (
     <div>
       <BrowserRouter>
         <Navbar />
-        <Routes>
-          {/*
+        <AuthProvider>
+          <Routes>
+            {/*
           {user?.loggedIn === true ? (
             <Route path="/test" />
           ) : (
@@ -26,14 +29,28 @@ function App() {
           )}
             */}
 
-          <Route path="/signin" element={<Signin />} />
+            <Route
+              path="/content"
+              element={
+                <PrivateRoutes>
+                  <Content />
+                </PrivateRoutes>
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                <PrivateRoutes>
+                  <Account />
+                </PrivateRoutes>
+              }
+            />
 
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-
-          <Route path="/content" element={<Content />} />
-          <Route path="/account" element={<Account />} />
-        </Routes>
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );

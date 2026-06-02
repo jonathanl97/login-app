@@ -79,18 +79,18 @@ router.post("/signout", async (req, res, next) => {
     if (err) return next(err);
   });
   //res.clearCookie("connect.sid");
-  //res.redirect("/");
+  res.send(200);
 });
 
 //get account/user name
-router.post("/account", checkAuthenticated, async (req, res) => {
+router.post("/user/account", checkAuthenticated, async (req, res) => {
   const results = await pool.query("SELECT name FROM users WHERE id=$1", [
     req.user.id,
   ]);
   res.json(results.rows[0].name);
 });
 
-router.post("/authenticated", async (req, res) => {
+router.post("/user/authenticated", async (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).send();
   } else {

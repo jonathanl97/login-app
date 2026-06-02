@@ -5,7 +5,8 @@ import {
   validateEmail,
   validatePassword,
 } from "../features/ValidateCredentials";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
 async function signinUser(credentials) {
   console.log(JSON.stringify(credentials));
@@ -51,6 +52,7 @@ async function registerUser(credentials) {
   //add response on successful/failed register
 }
 
+/*
 async function checkAuthenticated() {
   const response = await fetch("http://localhost:8080/authenticated", {
     credentials: "include",
@@ -62,6 +64,7 @@ async function checkAuthenticated() {
   });
   return response.ok;
 }
+*/
 
 export default function Signin() {
   const [name, setName] = useState("");
@@ -74,7 +77,10 @@ export default function Signin() {
   const [touched, setTouched] = useState();
   const [newUser, setNewUser] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { state } = useLocation();
 
+  /*
   useEffect(() => {
     redirectUser();
   }, []);
@@ -84,6 +90,7 @@ export default function Signin() {
     const response = await checkAuthenticated();
     if (response) navigate("/account");
   }
+  */
 
   const handleSubmitSignin = async (e) => {
     e.preventDefault();
@@ -101,11 +108,13 @@ export default function Signin() {
           email,
           password,
         });
+        //login();
       } catch (error) {
         throw error;
       } finally {
         setLoading(false);
-        navigate("/account");
+        login();
+        navigate(state?.path || "/");
       }
     }
   };

@@ -4,6 +4,7 @@ import styles from "./Account.module.css";
 import DeleteAccountModal from "../features/DeleteAccount";
 import ChangeEmailForm from "../features/ChangeEmail";
 import ChangePasswordForm from "../features/ChangePassword";
+import { useAuth } from "../hooks/useAuth";
 
 async function signOutUser() {
   //redirect("/login");
@@ -17,6 +18,7 @@ async function signOutUser() {
   });
 }
 
+/*
 async function checkAuthenticated() {
   const response = await fetch("http://localhost:8080/authenticated", {
     credentials: "include",
@@ -28,6 +30,7 @@ async function checkAuthenticated() {
   });
   return response.ok;
 }
+
 
 async function getName() {
   const response = await fetch("http://localhost:8080/account", {
@@ -41,12 +44,15 @@ async function getName() {
   const jsonResponse = await response.json();
   return jsonResponse;
 }
+*/
 
 export default function Account() {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
+  /*
   useEffect(() => {
     redirectUser();
   }, []);
@@ -59,12 +65,18 @@ export default function Account() {
       getName().then((result) => setName(result));
     }
   }
+  */
 
   const handleSignOut = async () => {
     try {
       await signOutUser();
+      //logout();
+      console.log("test");
     } catch (error) {
       throw error;
+    } finally {
+      logout();
+      navigate("/");
     }
     console.log("Signed out.");
     /*
