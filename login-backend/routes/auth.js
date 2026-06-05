@@ -90,11 +90,12 @@ router.post("/user/account", checkAuthenticated, async (req, res) => {
   res.json(results.rows[0].name);
 });
 
-router.post("/user/authenticated", async (req, res) => {
+router.post("/user/getuser", async (req, res) => {
   if (req.isAuthenticated()) {
-    res.status(200).send();
+    const user = { name: req.user.name, email: req.user.email, signedIn: true };
+    res.json(user);
   } else {
-    res.status(400).send();
+    res.status(400).json({ name: null, email: null, signedIn: false });
   }
 });
 

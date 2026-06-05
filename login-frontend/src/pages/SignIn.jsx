@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./SignIn.module.css";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
-import {
-  validateEmail,
-  validatePassword,
-} from "../features/ValidateCredentials";
+import { validateEmail, validatePassword } from "../utils/ValidateCredentials";
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
@@ -52,20 +49,6 @@ async function registerUser(credentials) {
   //add response on successful/failed register
 }
 
-/*
-async function checkAuthenticated() {
-  const response = await fetch("http://localhost:8080/authenticated", {
-    credentials: "include",
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
-  return response.ok;
-}
-*/
-
 export default function Signin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -79,18 +62,7 @@ export default function Signin() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { state } = useLocation();
-
-  /*
-  useEffect(() => {
-    redirectUser();
-  }, []);
-
-  //if signed in, redirect to last path. use history to redirect to path
-  async function redirectUser() {
-    const response = await checkAuthenticated();
-    if (response) navigate("/account");
-  }
-  */
+  const { user } = useAuth();
 
   const handleSubmitSignin = async (e) => {
     e.preventDefault();
@@ -114,6 +86,7 @@ export default function Signin() {
       } finally {
         setLoading(false);
         login();
+        console.log(user);
         navigate(state?.path || "/");
       }
     }
@@ -140,7 +113,8 @@ export default function Signin() {
         throw error;
       } finally {
         setLoading(false);
-        navigate("/account");
+        login();
+        navigate(state?.path || "/");
       }
     }
   };
@@ -189,7 +163,7 @@ export default function Signin() {
             <label className={styles.label}>
               <p className={styles.text}>Name:</p>
               <input
-                //optional?
+                required
                 className={styles.inputAreaName}
                 type="text"
                 placeholder="John Doe"
@@ -250,7 +224,6 @@ export default function Signin() {
           </label>
           <div className={styles.formButtons}>
             <button className={styles.button} type="submit" disabled={loading}>
-              {/*{loading ? "Loading..." : "Sign in" }*/}
               {newUser ? "Register" : "Sign in"}
             </button>
             <button

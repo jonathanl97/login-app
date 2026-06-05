@@ -38,8 +38,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      //maxAge: 1000 * 60 * 60 * 24,
-      maxAge: 1000 * 60 * 60 * 2,
+      //maxAge: 1000 * 60 * 60 * 24,  //24 hours
+      maxAge: 1000 * 60 * 60 * 2, //2 hours
     },
   }),
 );

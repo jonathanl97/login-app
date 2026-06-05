@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import styles from "./AccountFeatures.module.css";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
-import { validateEmail, validatePassword } from "./ValidateCredentials";
+import { validateEmail, validatePassword } from "../utils/ValidateCredentials";
+import { useNavigate } from "react-router";
 
-async function changeEmail(credentials) {
-  await fetch("http://localhost:8080/user/email", {
+async function deleteUser(credentials) {
+  await fetch("http://localhost:8080/user/delete", {
     credentials: "include",
-    method: "PUT",
+    method: "DELETE",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -15,55 +17,46 @@ async function changeEmail(credentials) {
   });
 }
 
-export default function ChangeEmailForm() {
-  const [oldEmail, setOldEmail] = useState("");
+export default function DeleteAccountModal({ showModal, children, onClose }) {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [oldEmailError, setOldEmailError] = useState("");
-  const [newEmailError, setNewEmailError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState();
+  const navigate = useNavigate();
 
-  const handleSubmitEmail = async (e) => {
+  const handleSubmitDelete = async (e) => {
     e.preventDefault();
 
-    const oeError = validateEmail(oldEmail);
-    const neError = validateEmail(newEmail);
+    const eError = validateEmail(email);
     const pError = validatePassword(password);
-    setOldEmailError(oeError);
-    setNewEmailError(neError);
+    setEmailError(eError);
     setPasswordError(pError);
 
-    if (!oldEmailError && !newEmailError && !passwordError) {
+    if (!emailError && !passwordError) {
       setLoading(true);
-      console.log("Updating email");
+      console.log("Deleting");
 
       try {
-        await changeEmail({
-          newEmail,
-          oldEmail,
+        await deleteUser({
+          email,
           password,
         });
       } catch (error) {
         throw error;
       } finally {
         setLoading(false);
+        navigate("/signin");
       }
     }
   };
 
-  const handleOldEmailBlur = () => {
+  const handleEmailBlur = () => {
     setTouched(true);
-    const error = validateEmail(oldEmail);
-    setOldEmailError(error);
-  };
-
-  const handleNewEmailBlur = () => {
-    setTouched(true);
-    const error = validateEmail(newEmail);
-    setNewEmailError(error);
+    const error = validateEmail(email);
+    setEmailError(error);
   };
 
   const handlePasswordBlur = () => {
@@ -72,23 +65,13 @@ export default function ChangeEmailForm() {
     setPasswordError(error);
   };
 
-  const handleOldEmailChange = (e) => {
+  const handleEmailChange = (e) => {
     const value = e.target.value;
-    setOldEmail(value);
+    setEmail(value);
 
     if (touched) {
       const error = validateEmail(value);
-      setOldEmailError(error);
-    }
-  };
-
-  const handleNewEmailChange = (e) => {
-    const value = e.target.value;
-    setNewEmail(value);
-
-    if (touched) {
-      const error = validateEmail(value);
-      setNewEmailError(error);
+      setEmailError(error);
     }
   };
 
@@ -102,45 +85,43 @@ export default function ChangeEmailForm() {
     }
   };
 
-  return (
-    <>
-      <h2 style={{ marginBottom: "1rem" }}>Change email adress</h2>
-      <form className={styles.form} onSubmit={handleSubmitEmail}>
-        <div className={styles.inputContainer}>
+  if (!showModal) return null;
+
+  return createPortal(
+    <div className={styles.modalContainer}>
+      <div className={styles.modal}>
+        <h1
+          style={{
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
+            marginTop: 0,
+            marginBottom: "2rem",
+          }}
+        >
+          Delete account?
+        </h1>
+        <form className={styles.modalForm} onSubmit={handleSubmitDelete}>
           <label className={styles.label}>
-            <p className={styles.text}>Current email:</p>
+            <p className={styles.text}>Email:</p>
             <input
+              required
               className={styles.inputArea}
               type="text"
               placeholder="example@email.com"
               maxLength={50}
-              onChange={handleOldEmailChange}
-              onBlur={handleOldEmailBlur}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
               disabled={loading}
             />
-            {touched && oldEmailError && (
-              <div className={styles.errorText}>{oldEmailError}</div>
-            )}
-          </label>
-          <label className={styles.label}>
-            <p className={styles.text}>New email:</p>
-            <input
-              className={styles.inputArea}
-              type="text"
-              placeholder="example@email.com"
-              maxLength={50}
-              onChange={handleNewEmailChange}
-              onBlur={handleNewEmailBlur}
-              disabled={loading}
-            />
-            {touched && newEmailError && (
-              <div className={styles.errorText}>{newEmailError}</div>
+            {touched && emailError && (
+              <div className={styles.errorText}>{emailError}</div>
             )}
           </label>
           <label className={styles.label}>
             <p className={styles.text}>Password:</p>
             <div className={styles.passwordContainer}>
               <input
+                required
                 className={styles.inputArea}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
@@ -161,13 +142,24 @@ export default function ChangeEmailForm() {
               <div className={styles.errorText}>{passwordError}</div>
             )}
           </label>
-        </div>
-        <div className={styles.buttonContainer}>
-          <button className={styles.button} type="submit">
-            Confirm
-          </button>
-        </div>
-      </form>
-    </>
+          <p style={{ alignSelf: "center", marginBottom: "0.5rem" }}>
+            This action is permanent.
+          </p>
+          <div className={styles.modalButtons}>
+            <button
+              type="button"
+              className={styles.cancelButton}
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button type="submit" className={styles.deleteButton}>
+              Delete
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>,
+    document.body,
   );
 }

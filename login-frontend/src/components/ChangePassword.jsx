@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./AccountFeatures.module.css";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
-import { validateEmail, validatePassword } from "./ValidateCredentials";
+import { validateEmail, validatePassword } from "../utils/ValidateCredentials";
 
 async function changePassword(credentials) {
   await fetch("http://localhost:8080/user/password", {
