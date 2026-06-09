@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { AuthContext } from "./useAuth";
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({ name: null, email: null, signedIn: null });
+  const [user, setUser] = useState({
+    name: null,
+    firstName: null,
+    email: null,
+    signedIn: null,
+  });
 
   useEffect(() => {
     getUser();
@@ -33,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser({ name: null, email: null, signedIn: false });
+    setUser({ name: null, firstName: null, email: null, signedIn: false });
   };
 
   return <AuthContext value={{ user, login, logout }}>{children}</AuthContext>;

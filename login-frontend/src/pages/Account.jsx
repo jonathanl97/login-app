@@ -27,31 +27,39 @@ export default function Account() {
   const handleSignOut = async () => {
     try {
       await signOutUser();
-      console.log("test");
     } catch (error) {
       throw error;
     } finally {
       logout();
       navigate("/");
+      console.log(user);
     }
-    console.log("Signed out.");
   };
 
   return (
     <div className={styles.accountSettings}>
       <div className={styles.headerContainer}>
         <h1>Account</h1>
-        {/*<h1>Hello {name}</h1>*/}
-        <h1>{user.signedIn ? "Hello " + user.name : ""}</h1>
+        <h1>{user.signedIn ? "Hello " + user.firstName : ""}</h1>
         <button className={styles.signOutButton} onClick={handleSignOut}>
           Sign out
         </button>
       </div>
-      <div className={styles.changeEmailContainer}>
+      <div className={styles.accountSectionsContainer}>
+        <div className={styles.userInfoContainer}>
+          <p className={styles.userText}>Name:</p>
+          <p>{user.signedIn ? user.name : ""}</p>
+        </div>
+        <div className={styles.userInfoContainer}>
+          <p className={styles.userText}>Email:</p>
+          <p>{user.signedIn ? user.email : ""}</p>
+        </div>
+      </div>
+      <div className={styles.accountSectionsContainer}>
         <ChangeEmailForm />
       </div>
 
-      <div className={styles.changePasswordContainer}>
+      <div className={styles.accountSectionsContainer}>
         <ChangePasswordForm />
       </div>
 

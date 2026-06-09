@@ -19,7 +19,7 @@
   border-bottom: 2px solid #eafdf8;
 }
 
-.changeEmailContainer {
+.accountSectionsContainer {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid #eafdf8;
@@ -28,12 +28,15 @@
   align-items: center;
 }
 
-.changePasswordContainer {
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #eafdf8;
-  margin-bottom: 1rem;
-  width: 100%;
-  text-align: left;
+.userInfoContainer {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+}
+
+.userText {
+  width: 6rem;
+  font-weight: 600;
 }
 
 .deleteAccountContainer {

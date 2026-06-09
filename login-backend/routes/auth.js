@@ -79,6 +79,7 @@ router.post("/signout", async (req, res, next) => {
     if (err) return next(err);
   });
   //res.clearCookie("connect.sid");
+  //res.cookie({ maxAge: 0 });
   res.send(200);
 });
 
@@ -92,7 +93,12 @@ router.post("/user/account", checkAuthenticated, async (req, res) => {
 
 router.post("/user/getuser", async (req, res) => {
   if (req.isAuthenticated()) {
-    const user = { name: req.user.name, email: req.user.email, signedIn: true };
+    const user = {
+      name: req.user.name,
+      firstName: req.user.name.split(" ")[0],
+      email: req.user.email,
+      signedIn: true,
+    };
     res.json(user);
   } else {
     res.status(400).json({ name: null, email: null, signedIn: false });

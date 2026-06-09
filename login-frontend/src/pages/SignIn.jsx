@@ -17,7 +17,6 @@ async function signinUser(credentials) {
     body: JSON.stringify(credentials),
   });
 
-  console.log(response);
   /*
   if (!response.ok) {
     throw new Error(`Login failed: ${response.statusText}`);
@@ -74,13 +73,11 @@ export default function Signin() {
 
     if (!emailError && !passwordError) {
       setLoading(true);
-      console.log("Signing in");
       try {
         await signinUser({
           email,
           password,
         });
-        //login();
       } catch (error) {
         throw error;
       } finally {
@@ -88,6 +85,7 @@ export default function Signin() {
         login();
         console.log(user);
         navigate(state?.path || "/");
+        //{!user.signedIn ? "" : navigate(state?.path);}
       }
     }
   };
@@ -102,7 +100,6 @@ export default function Signin() {
 
     if (!emailError && !passwordError) {
       setLoading(true);
-      console.log("Registering");
       try {
         await registerUser({
           name,
