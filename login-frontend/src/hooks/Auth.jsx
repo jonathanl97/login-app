@@ -10,11 +10,11 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    getUser();
+    login();
     console.log(user);
   }, []);
 
-  const getUser = async () => {
+  const login = async () => {
     try {
       const response = await fetch("http://localhost:8080/user/getuser", {
         credentials: "include",
@@ -29,12 +29,6 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       throw err;
     }
-  };
-
-  const login = async () => {
-    //setUser({ ...user, signedIn: true });
-    getUser();
-    console.log(user);
   };
 
   const logout = () => {

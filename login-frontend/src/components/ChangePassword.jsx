@@ -120,8 +120,10 @@ export default function ChangePasswordForm() {
               onBlur={handleEmailBlur}
               disabled={loading}
             />
-            {touched && emailError && (
+            {touched && emailError ? (
               <div className={styles.errorText}>{emailError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <label className={styles.label}>
@@ -145,8 +147,10 @@ export default function ChangePasswordForm() {
                 {showOldPassword ? <EyeIcon /> : <EyeSlashIcon />}
               </button>
             </div>
-            {touched && oldPasswordError && (
+            {touched && oldPasswordError ? (
               <div className={styles.errorText}>{oldPasswordError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <label className={styles.label}>
@@ -170,8 +174,10 @@ export default function ChangePasswordForm() {
                 {showNewPassword ? <EyeIcon /> : <EyeSlashIcon />}
               </button>
             </div>
-            {touched && newPasswordError && (
+            {touched && newPasswordError ? (
               <div className={styles.errorText}>{newPasswordError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
         </div>

@@ -118,8 +118,10 @@ export default function ChangeEmailForm() {
               onBlur={handleOldEmailBlur}
               disabled={loading}
             />
-            {touched && oldEmailError && (
+            {touched && oldEmailError ? (
               <div className={styles.errorText}>{oldEmailError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <label className={styles.label}>
@@ -133,8 +135,10 @@ export default function ChangeEmailForm() {
               onBlur={handleNewEmailBlur}
               disabled={loading}
             />
-            {touched && newEmailError && (
+            {touched && newEmailError ? (
               <div className={styles.errorText}>{newEmailError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <label className={styles.label}>
@@ -157,8 +161,10 @@ export default function ChangeEmailForm() {
                 {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
               </button>
             </div>
-            {touched && passwordError && (
+            {touched && passwordError ? (
               <div className={styles.errorText}>{passwordError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
         </div>

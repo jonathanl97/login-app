@@ -61,7 +61,6 @@ export default function Signin() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { state } = useLocation();
-  const { user } = useAuth();
 
   const handleSubmitSignin = async (e) => {
     e.preventDefault();
@@ -82,10 +81,7 @@ export default function Signin() {
         throw error;
       } finally {
         setLoading(false);
-        login();
-        console.log(user);
-        navigate(state?.path || "/");
-        //{!user.signedIn ? "" : navigate(state?.path);}
+        await login().then(() => navigate(state?.path || "/"));
       }
     }
   };
@@ -110,8 +106,7 @@ export default function Signin() {
         throw error;
       } finally {
         setLoading(false);
-        login();
-        navigate(state?.path || "/");
+        await login().then(() => navigate(state?.path || "/"));
       }
     }
   };
@@ -169,9 +164,8 @@ export default function Signin() {
                 onChange={(e) => setName(e.target.value)}
                 disabled={loading}
               />
-              {touched && emailError && (
-                <div className={styles.errorText}>{emailError}</div>
-              )}
+              {/*Just for equal spacing*/}
+              <div className={styles.errorText}></div>
             </label>
           )}
 
@@ -188,8 +182,10 @@ export default function Signin() {
               onBlur={handleEmailBlur}
               disabled={loading}
             />
-            {touched && emailError && (
+            {touched && emailError ? (
               <div className={styles.errorText}>{emailError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
 
@@ -215,8 +211,10 @@ export default function Signin() {
                 {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
               </button>
             </div>
-            {touched && passwordError && (
+            {touched && passwordError ? (
               <div className={styles.errorText}>{passwordError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <div className={styles.formButtons}>

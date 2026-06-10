@@ -32,7 +32,6 @@ export default function Account() {
     } finally {
       logout();
       navigate("/");
-      console.log(user);
     }
   };
 

@@ -4,6 +4,7 @@ import styles from "./AccountFeatures.module.css";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { validateEmail, validatePassword } from "../utils/ValidateCredentials";
 import { useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
 async function deleteUser(credentials) {
   await fetch("http://localhost:8080/user/delete", {
@@ -26,6 +27,7 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleSubmitDelete = async (e) => {
     e.preventDefault();
@@ -37,7 +39,6 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
 
     if (!emailError && !passwordError) {
       setLoading(true);
-      console.log("Deleting");
 
       try {
         await deleteUser({
@@ -48,7 +49,8 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
         throw error;
       } finally {
         setLoading(false);
-        navigate("/signin");
+        logout();
+        navigate("/");
       }
     }
   };
@@ -113,8 +115,10 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
               onBlur={handleEmailBlur}
               disabled={loading}
             />
-            {touched && emailError && (
+            {touched && emailError ? (
               <div className={styles.errorText}>{emailError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <label className={styles.label}>
@@ -138,8 +142,10 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
                 {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
               </button>
             </div>
-            {touched && passwordError && (
+            {touched && passwordError ? (
               <div className={styles.errorText}>{passwordError}</div>
+            ) : (
+              <div className={styles.errorText}></div>
             )}
           </label>
           <p style={{ alignSelf: "center", marginBottom: "0.5rem" }}>
