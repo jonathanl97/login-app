@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     login();
-    console.log(user);
   }, []);
 
   const login = async () => {

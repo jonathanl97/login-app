@@ -5,6 +5,10 @@ const PrivateRoutes = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
 
+  if (user.signedIn === null) {
+    return <div></div>;
+  }
+
   return user.signedIn ? (
     children
   ) : (
