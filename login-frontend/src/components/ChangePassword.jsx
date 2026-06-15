@@ -4,7 +4,7 @@ import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { validateEmail, validatePassword } from "../utils/ValidateCredentials";
 
 async function changePassword(credentials) {
-  await fetch("http://localhost:8080/user/password", {
+  const response = await fetch("http://localhost:8080/user/password", {
     credentials: "include",
     method: "PUT",
     headers: {
@@ -13,6 +13,8 @@ async function changePassword(credentials) {
     },
     body: JSON.stringify(credentials),
   });
+
+  const jsonResponse = await response.json();
 }
 
 export default function ChangePasswordForm() {
@@ -39,7 +41,6 @@ export default function ChangePasswordForm() {
 
     if (!emailError && !oldPasswordError && !newPasswordError) {
       setLoading(true);
-      console.log("Updating password");
 
       try {
         await changePassword({

@@ -16,7 +16,7 @@ router.post("/register", async (req, res, next) => {
     );
 
     if (existingUser.rowCount > 0) {
-      return res.status(400).send("User already exists.");
+      return res.status(409).json("User already exists.");
     }
 
     bcrypt.genSalt(function (err, salt) {
@@ -36,7 +36,7 @@ router.post("/register", async (req, res, next) => {
             }
             res
               .status(201)
-              .send(`User registered and signed in with email: ${email}`);
+              .json(`User registered and signed in with email: ${email}`);
           });
         } catch (err) {
           throw err;
@@ -49,7 +49,6 @@ router.post("/register", async (req, res, next) => {
 });
 
 //sign in
-//fix this. return response/redirect to dashboard etc.
 router.post("/signin", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -57,8 +56,7 @@ router.post("/signin", (req, res, next) => {
     }
 
     if (!user) {
-      console.log("user not found");
-      //return err; //change to redirect to login/register
+      res.status(499).json("Incorrect email or password");
     }
 
     req.logIn(user, function (err) {
@@ -66,31 +64,20 @@ router.post("/signin", (req, res, next) => {
         return next(err);
       }
 
-      //change
-      return res.send("signed in");
+      return res.status(200).json("Signed in");
     });
   })(req, res, next);
 });
 
-//sign out //fix this
-//remove cookie, redirect to login page or home page. not yet working.
+//sign out
 router.post("/signout", async (req, res, next) => {
   req.logOut(function (err) {
     if (err) return next(err);
   });
-  //res.clearCookie("connect.sid");
-  //res.cookie({ maxAge: 0 });
-  res.send(200);
+  res.status(200).json("Signed out");
 });
 
-//get account/user name
-router.post("/user/account", checkAuthenticated, async (req, res) => {
-  const results = await pool.query("SELECT name FROM users WHERE id=$1", [
-    req.user.id,
-  ]);
-  res.json(results.rows[0].name);
-});
-
+//get user info
 router.post("/user/getuser", async (req, res) => {
   if (req.isAuthenticated()) {
     const user = {
@@ -99,9 +86,12 @@ router.post("/user/getuser", async (req, res) => {
       email: req.user.email,
       signedIn: true,
     };
-    res.json(user);
+    res.status(200).json(user);
   } else {
-    res.status(400).json({ name: null, email: null, signedIn: false });
+    res
+      .status(498)
+      .json({ name: null, firstName: null, email: null, signedIn: false });
+    //No user signed in
   }
 });
 
@@ -109,20 +99,24 @@ router.post("/user/getuser", async (req, res) => {
 router.put("/user/email", checkAuthenticated, async (req, res) => {
   const { newEmail, oldEmail, password } = req.body;
 
-  const { id, isMatch } = await verifyUser(oldEmail, password);
-
-  if (id == req.user.id && isMatch) {
-    try {
-      await pool.query("UPDATE users SET email=$1 WHERE email=$2", [
-        newEmail,
-        oldEmail,
-      ]);
-      res.status(200).send(`Email updated from: ${oldEmail} to: ${newEmail}`);
-    } catch (err) {
-      throw err;
-    }
+  if (req.user.email != oldEmail) {
+    res.status(499).json("Incorrect email or password");
   } else {
-    res.send("Incorrect credentials");
+    const { id, isMatch } = await verifyUser(oldEmail, password);
+
+    if (id == req.user.id && isMatch) {
+      try {
+        await pool.query("UPDATE users SET email=$1 WHERE email=$2", [
+          newEmail,
+          oldEmail,
+        ]);
+        res.status(200).json(`Email updated from: ${oldEmail} to: ${newEmail}`);
+      } catch (err) {
+        throw err;
+      }
+    } else {
+      res.status(499).json("Incorrect email or password");
+    }
   }
 });
 
@@ -130,37 +124,41 @@ router.put("/user/email", checkAuthenticated, async (req, res) => {
 router.put("/user/password", checkAuthenticated, async (req, res) => {
   const { newPassword, email, oldPassword } = req.body;
 
-  const { id, isMatch } = await verifyUser(email, oldPassword);
-
-  if (id == req.user.id && isMatch) {
-    try {
-      const results = await pool.query("SELECT * FROM users WHERE email=$1", [
-        email,
-      ]);
-
-      if (results.rows.length > 0) {
-        const user = results.rows[0];
-
-        //bcrypt
-        bcrypt.genSalt(function (err, salt) {
-          bcrypt.hash(newPassword, salt, async function (err, hash) {
-            try {
-              await pool.query("UPDATE users SET password=$1 WHERE email=$2", [
-                hash,
-                email,
-              ]);
-              res.status(200).send(`Password updated for account: ${email}`);
-            } catch (err) {
-              throw err;
-            }
-          });
-        });
-      }
-    } catch (err) {
-      throw err;
-    }
+  if (req.user.email != email) {
+    res.status(499).json("Incorrect email or password");
   } else {
-    res.send("Incorrect credentials");
+    const { id, isMatch } = await verifyUser(email, oldPassword);
+
+    if (id == req.user.id && isMatch) {
+      try {
+        const results = await pool.query("SELECT * FROM users WHERE email=$1", [
+          email,
+        ]);
+
+        if (results.rows.length > 0) {
+          const user = results.rows[0];
+
+          //bcrypt
+          bcrypt.genSalt(function (err, salt) {
+            bcrypt.hash(newPassword, salt, async function (err, hash) {
+              try {
+                await pool.query(
+                  "UPDATE users SET password=$1 WHERE email=$2",
+                  [hash, email],
+                );
+                res.status(200).json(`Password updated for account: ${email}`);
+              } catch (err) {
+                throw err;
+              }
+            });
+          });
+        }
+      } catch (err) {
+        throw err;
+      }
+    } else {
+      res.status(499).json("Incorrect email or password");
+    }
   }
 });
 
@@ -173,12 +171,12 @@ router.delete("/user/delete", checkAuthenticated, async (req, res, next) => {
   if (id == req.user.id && isMatch) {
     try {
       await pool.query("DELETE FROM users WHERE email=$1", [email]);
-      res.status(200).send(`User deleted with email: ${email}`);
+      res.status(200).json(`User deleted with email: ${email}`);
     } catch (err) {
       throw err;
     }
   } else {
-    res.send("Incorrect credentials");
+    res.status(499).json("Incorrect email or password");
   }
 
   req.logOut(function (err) {
@@ -186,15 +184,16 @@ router.delete("/user/delete", checkAuthenticated, async (req, res, next) => {
   });
 });
 
-//
+//check if user is authenticated/
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    //res.status(400).send();
+    res.status(498).json("Not authenticated");
   }
 }
 
+//verify user credentials for when changing email or password
 async function verifyUser(email, password) {
   try {
     const results = await pool.query("SELECT * FROM users WHERE email=$1", [
@@ -217,6 +216,8 @@ async function verifyUser(email, password) {
           isMatch: match,
         };
       }
+    } else {
+      return false;
     }
   } catch (err) {
     throw err;

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
 async function deleteUser(credentials) {
-  await fetch("http://localhost:8080/user/delete", {
+  const response = await fetch("http://localhost:8080/user/delete", {
     credentials: "include",
     method: "DELETE",
     headers: {
@@ -16,6 +16,8 @@ async function deleteUser(credentials) {
     },
     body: JSON.stringify(credentials),
   });
+
+  const jsonResponse = await response.json();
 }
 
 export default function DeleteAccountModal({ showModal, children, onClose }) {

@@ -17,14 +17,7 @@ async function signinUser(credentials) {
     body: JSON.stringify(credentials),
   });
 
-  /*
-  if (!response.ok) {
-    throw new Error(`Login failed: ${response.statusText}`);
-  }
-  const data = await response.json();
-  return data;
-  */
-  // handle response
+  const jsonResponse = await response.json();
 }
 
 async function registerUser(credentials) {
@@ -38,14 +31,7 @@ async function registerUser(credentials) {
     body: JSON.stringify(credentials),
   });
 
-  /*
-  if (!response.ok) {
-    return ('Failed to register user')
-  } else {
-    return ('User registered successfully')
-  }
-  */
-  //add response on successful/failed register
+  const jsonResponse = await response.json();
 }
 
 export default function Signin() {
