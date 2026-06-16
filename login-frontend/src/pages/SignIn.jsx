@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
 async function signinUser(credentials) {
-  console.log(JSON.stringify(credentials));
   const response = await fetch("http://localhost:8080/signin", {
     credentials: "include",
     method: "POST",
@@ -18,6 +17,10 @@ async function signinUser(credentials) {
   });
 
   const jsonResponse = await response.json();
+
+  if (!response.ok) {
+    alert(jsonResponse);
+  }
 }
 
 async function registerUser(credentials) {
@@ -32,6 +35,10 @@ async function registerUser(credentials) {
   });
 
   const jsonResponse = await response.json();
+
+  if (!response.ok) {
+    alert(jsonResponse);
+  }
 }
 
 export default function Signin() {
@@ -162,7 +169,7 @@ export default function Signin() {
               className={styles.inputAreaEmail}
               type="text"
               placeholder="example@email.com"
-              maxLength={50}
+              maxLength={51}
               value={email}
               onChange={handleEmailChange}
               onBlur={handleEmailBlur}

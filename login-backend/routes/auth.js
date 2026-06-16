@@ -9,6 +9,10 @@ const router = express.Router();
 router.post("/register", async (req, res, next) => {
   const { name, email, password } = req.body;
 
+  const inputCheck = validateInput(name, email, password);
+
+  if (!inputCheck) return res.status(400).json("Invalid input");
+
   try {
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE email=$1",
@@ -34,7 +38,7 @@ router.post("/register", async (req, res, next) => {
             if (err) {
               return next(err);
             }
-            res
+            return res
               .status(201)
               .json(`User registered and signed in with email: ${email}`);
           });
@@ -56,7 +60,7 @@ router.post("/signin", (req, res, next) => {
     }
 
     if (!user) {
-      res.status(499).json("Incorrect email or password");
+      return res.status(499).json("Incorrect email or password");
     }
 
     req.logIn(user, function (err) {
@@ -64,7 +68,7 @@ router.post("/signin", (req, res, next) => {
         return next(err);
       }
 
-      return res.status(200).json("Signed in");
+      res.status(200).json("Signed in");
     });
   })(req, res, next);
 });
@@ -98,6 +102,19 @@ router.post("/user/getuser", async (req, res) => {
 //update email
 router.put("/user/email", checkAuthenticated, async (req, res) => {
   const { newEmail, oldEmail, password } = req.body;
+
+  try {
+    const existingUser = await pool.query(
+      "SELECT * FROM users WHERE email=$1",
+      [newEmail],
+    );
+
+    if (existingUser.rowCount > 0) {
+      return res.status(409).json("Cannot change to this email");
+    }
+  } catch (err) {
+    throw err;
+  }
 
   if (req.user.email != oldEmail) {
     res.status(499).json("Incorrect email or password");
@@ -176,7 +193,7 @@ router.delete("/user/delete", checkAuthenticated, async (req, res, next) => {
       throw err;
     }
   } else {
-    res.status(499).json("Incorrect email or password");
+    return res.status(499).json("Incorrect email or password");
   }
 
   req.logOut(function (err) {
@@ -222,6 +239,23 @@ async function verifyUser(email, password) {
   } catch (err) {
     throw err;
   }
+}
+
+//check valdity of form input
+function validateInput(name, email, password) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (name.length > 32) return false;
+
+  if (email.length > 50) return false;
+
+  if (!emailRegex.test(email)) return false;
+
+  if (password.length < 8) return false;
+
+  if (password.length < 50) return false;
+
+  return true;
 }
 
 export default router;

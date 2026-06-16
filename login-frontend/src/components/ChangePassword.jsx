@@ -15,6 +15,8 @@ async function changePassword(credentials) {
   });
 
   const jsonResponse = await response.json();
+
+  alert(jsonResponse);
 }
 
 export default function ChangePasswordForm() {

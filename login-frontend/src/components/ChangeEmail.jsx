@@ -15,6 +15,8 @@ async function changeEmail(credentials) {
   });
 
   const jsonResponse = await response.json();
+
+  alert(jsonResponse);
 }
 
 export default function ChangeEmailForm() {

@@ -5,6 +5,8 @@ export const validateEmail = (value) => {
     return "Please enter your email.";
   } else if (!emailRegex.test(value)) {
     return "Please enter a valid email.";
+  } else if (value.length > 50) {
+    return "Email cannot exceed 50 characters";
   }
   return "";
 };

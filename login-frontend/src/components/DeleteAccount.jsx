@@ -18,6 +18,10 @@ async function deleteUser(credentials) {
   });
 
   const jsonResponse = await response.json();
+
+  if (!response.ok) {
+    alert(jsonResponse);
+  }
 }
 
 export default function DeleteAccountModal({ showModal, children, onClose }) {
