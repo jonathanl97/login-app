@@ -70,11 +70,12 @@ export default function Signin() {
           email,
           password,
         });
+        await login();
+        navigate(state?.path || "/");
       } catch (error) {
         throw error;
       } finally {
         setLoading(false);
-        await login().then(() => navigate(state?.path || "/"));
       }
     }
   };
@@ -95,11 +96,12 @@ export default function Signin() {
           email,
           password,
         });
+        await login();
+        navigate(state?.path || "/");
       } catch (error) {
         throw error;
       } finally {
         setLoading(false);
-        await login().then(() => navigate(state?.path || "/"));
       }
     }
   };

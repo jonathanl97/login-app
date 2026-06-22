@@ -51,12 +51,11 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
           email,
           password,
         });
+        logout();
       } catch (error) {
         throw error;
       } finally {
         setLoading(false);
-        logout();
-        navigate("/");
       }
     }
   };
@@ -166,7 +165,7 @@ export default function DeleteAccountModal({ showModal, children, onClose }) {
               Cancel
             </button>
             <button type="submit" className={styles.deleteButton}>
-              Delete
+              {loading ? "Loading..." : "Delete"}
             </button>
           </div>
         </form>

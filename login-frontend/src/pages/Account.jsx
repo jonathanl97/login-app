@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import styles from "./Account.module.css";
 import DeleteAccountModal from "../components/DeleteAccount";
 import ChangeEmailForm from "../components/ChangeEmail";
@@ -19,19 +18,21 @@ async function signOutUser() {
 
 export default function Account() {
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { logout } = useAuth();
 
   const handleSignOut = async () => {
+    setLoading(true);
+
     try {
       await signOutUser();
-    } catch (error) {
-      throw error;
-    } finally {
       logout();
-      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,7 +42,7 @@ export default function Account() {
         <h1>Account</h1>
         <h1>{user.signedIn ? "Hello " + user.firstName : ""}</h1>
         <button className={styles.signOutButton} onClick={handleSignOut}>
-          Sign out
+          {loading ? "Loading..." : "Sign out"}
         </button>
       </div>
       <div className={styles.accountSectionsContainer}>

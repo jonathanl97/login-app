@@ -78,7 +78,7 @@ router.post("/signout", async (req, res, next) => {
   req.logOut(function (err) {
     if (err) return next(err);
   });
-  res.status(200).json("Signed out");
+  return res.status(200).json("Signed out");
 });
 
 //get user info
@@ -253,7 +253,7 @@ function validateInput(name, email, password) {
 
   if (password.length < 8) return false;
 
-  if (password.length < 50) return false;
+  if (password.length > 50) return false;
 
   return true;
 }

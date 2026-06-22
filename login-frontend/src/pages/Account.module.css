@@ -72,6 +72,7 @@
 .signOutButton {
   composes: button;
   background-color: #7d65a4;
+  width: 9rem;
 
   &:hover {
     background-color: #43355a;
@@ -81,6 +82,7 @@
 .deleteButton {
   composes: button;
   background-color: #a30000;
+  width: 9rem;
 
   &:hover {
     background-color: #770000;

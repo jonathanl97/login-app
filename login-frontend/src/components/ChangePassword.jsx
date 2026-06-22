@@ -186,7 +186,7 @@ export default function ChangePasswordForm() {
         </div>
         <div className={styles.buttonContainer}>
           <button className={styles.button} type="submit">
-            Confirm
+            {loading ? "Loading..." : "Confirm"}
           </button>
         </div>
       </form>
